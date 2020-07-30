@@ -64,8 +64,8 @@ jobs:
 
       - name: Export the project
         run: |
-          mkdir release
-          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "linux" release/
+          mkdir -p release
+          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "linux" ./release/
           mv release ConceptGraph
           zip -r ConceptGraph.zip ConceptGraph
 
