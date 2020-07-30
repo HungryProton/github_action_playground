@@ -16,9 +16,11 @@ jobs:
     
       - name: Test some windows commands
         run: |
-          md dir1
-          del dir1
-          if exists dir1 del dir1
+          md dir1 2>nul
+          md dir1 2>nul
+          del dir1 2>nul
+          del dir1 2>nul
+          
           md dir1
           md dir2
           md dir3
