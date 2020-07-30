@@ -9,22 +9,25 @@ on:
         required: true
 
 jobs:
-  greet:
+  linux_export:
+    name: Export Linux version
     runs-on: ubuntu-20.04
-
-    steps:
-    - name: Clone the editor binaries
-      uses: actions/checkout@v2
-      with:
-        repository: HungryProton/concept_graph_environment
-        path: builds
     
+    steps:
+
     - name: Clone the ConceptGraph repository
       uses: actions/checkout@v2
       with:
         repository: HungryProton/concept_graph
         path: concept_graph
         ref: standalone
+        
+    - name: Clone the editor binaries
+      uses: actions/checkout@v2
+      with:
+        repository: HungryProton/concept_graph_environment
+        path: builds
+        lfs: true
     
     - name: Export the project
       run: |
