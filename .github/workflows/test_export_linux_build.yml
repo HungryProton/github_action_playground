@@ -14,60 +14,59 @@ jobs:
     runs-on: ubuntu-20.04
     
     steps:
-     
-    - name: Clone the editor binaries
-      uses: actions/checkout@v2
-      with:
-        repository: HungryProton/concept_graph_environment
-        path: builds
-        lfs: true
-       
-    - name: Clone the ConceptGraph repository
-      uses: actions/checkout@v2
-      with:
-        repository: HungryProton/concept_graph
-        path: concept_graph
-        ref: standalone
-    
-    - name: Compile GDnative libraries
-      run: |
-        cd concept_graph/src/native
-        git submodule update --init godot-cpp
-        cd godot-cpp
-        git submodule update --init godot_headers
-        
-        scons -j2 platform=linux generate_bindings=yes bits=64
-        cd ../
-        scons -j2 platform=linux bits=64
-    
-    - name: Export the project
-      run: |
-        mkdir release
-        builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "linux" release/
-        mv release ConceptGraph
-        zip -r ConceptGraph.zip ConceptGraph
-    
-    - name: Create a Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
+
+      - name: Clone the editor binaries
+        uses: actions/checkout@v2
+        with:
+          repository: HungryProton/concept_graph_environment
+          path: builds
+          lfs: true
+
+      - name: Clone the ConceptGraph repository
+        uses: actions/checkout@v2
+        with:
+          repository: HungryProton/concept_graph
+          path: concept_graph
+          ref: standalone
+
+      - name: Compile GDnative libraries
+        run: |
+          cd concept_graph/src/native
+          git submodule update --init godot-cpp
+          cd godot-cpp
+          git submodule update --init godot_headers
+
+          scons -j2 platform=linux generate_bindings=yes bits=64
+          cd ../
+          scons -j2 platform=linux bits=64
+
+      - name: Export the project
+        run: |
+          mkdir release
+          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "linux" release/
+          mv release ConceptGraph
+          zip -r ConceptGraph.zip ConceptGraph
+
+      - name: Create a Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: ${{ github.ref }}
+            release_name: Linux Release ${{ github.event.inputs.version }}
+            body: ''
+            draft: true
+            prerelease: true
+
+      - name: Upload artifacts to the release
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-          tag_name: ${{ github.ref }}
-          release_name: Linux Release ${{ github.event.inputs.version }}
-          body: ''
-          draft: true
-          prerelease: true
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ConceptGraph.zip
+          asset_name: ConceptGraph.zip
+          asset_content_type: application/zip
     
-    - name: Upload artifacts to the release
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ConceptGraph.zip
-        asset_name: ConceptGraph.zip
-        asset_content_type: application/zip
-        
-        
