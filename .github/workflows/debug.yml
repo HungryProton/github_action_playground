@@ -16,10 +16,10 @@ jobs:
     
       - name: Test some windows commands
         run: |
-          md dir1 2>nul
-          md dir1 2>nul
-          del dir1 2>nul
-          del dir1 2>nul
+          md dir1 2> nul
+          md dir1 2> nul
+          del dir1 2> nul
+          del dir1 2> nul
           
           md dir1
           md dir2
