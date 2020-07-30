@@ -16,12 +16,8 @@ jobs:
     
       - name: Test some windows commands
         run: |
-          md dir1 2> nul
-          md dir1 2> nul
-          del dir1 2> nul
-          del dir1 2> nul
+          mkdir -p stuff
+          mkdir -p stuff
+          rm -rf stuff
+          rm -rf stuff2
           
-          md dir1
-          md dir2
-          md dir3
-          move dir3 dir99
