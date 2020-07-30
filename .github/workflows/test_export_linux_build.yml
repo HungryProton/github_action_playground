@@ -32,7 +32,7 @@ jobs:
     - name: Export the project
       run: |
         mkdir release
-        builds/linux/godot.x11.tools.64 --path concept_graph --export "linux"
+        builds/server/godot_server.x11.tools.64 --path concept_graph --export "linux"
         mv release ConceptGraph
         zip -r ConceptGraph.zip ConceptGraph
     
@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.event.inputs.version }}
+          release_name: Linux Release ${{ github.event.inputs.version }}
           body: ''
           draft: true
           prerelease: true
