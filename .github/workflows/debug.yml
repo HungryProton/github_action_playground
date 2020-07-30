@@ -8,24 +8,17 @@ on:
         default: '0.0'
         required: true
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
   greet:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     
-      - name: Create a Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            tag_name: ${{ github.ref }}
-            release_name: Linux Release ${{ github.event.inputs.version }}
-            body: ''
-            draft: true
-            prerelease: true
+      - name: Test some windows commands
+        run: |
+          md dir1
+          md dir1
+          md dir1
+          md dir2
+          md dir3
+          move dir3 dir99
