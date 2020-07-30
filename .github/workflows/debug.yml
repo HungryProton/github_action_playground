@@ -18,7 +18,7 @@ jobs:
         run: |
           md dir1
           del dir1
-          del dir1
+          if exists dir1 del dir1
           md dir1
           md dir2
           md dir3
