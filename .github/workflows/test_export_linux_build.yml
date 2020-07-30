@@ -1,0 +1,59 @@
+name: Export Linux Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number, used for the release name'
+        default: '0.0'
+        required: true
+
+jobs:
+  greet:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Clone the editor binaries
+      uses: actions/checkout@v2
+      with:
+        repository: HungryProton/concept_graph_environment
+        path: builds
+    
+    - name: Clone the ConceptGraph repository
+      uses: actions/checkout@v2
+      with:
+        repository: HungryProton/concept_graph
+        path: concept_graph
+        ref: standalone
+    
+    - name: Export the project
+      run: |
+        mkdir release
+        builds/linux/godot.x11.tools.64 --path concept_graph --export "linux"
+        mv release ConceptGraph
+        zip -r ConceptGraph.zip ConceptGraph
+    
+    - name: Create a Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.event.inputs.version }}
+          body: ''
+          draft: true
+          prerelease: true
+    
+    - name: Upload artifacts to the release
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ConceptGraph.zip
+        asset_name: ConceptGraph.zip
+        asset_content_type: application/zip
+        
+        
