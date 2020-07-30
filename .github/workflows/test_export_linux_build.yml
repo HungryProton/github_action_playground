@@ -14,6 +14,27 @@ jobs:
     runs-on: ubuntu-20.04
     
     steps:
+        # Azure repositories are not reliable, we need to prevent azure giving us packages.
+      - name: Make apt sources.list use the default Ubuntu repositories
+        run: |
+          sudo cp -f godot/misc/ci/sources.list /etc/apt/sources.list
+          sudo apt-get update
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install build-essential pkg-config libx11-dev libxcursor-dev libxinerama-dev libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev yasm
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: Configuring Python packages
+        run: |
+          python -c "import sys; print(sys.version)"
+          python -m pip install scons
+          python --version
+          scons --version
 
       - name: Clone the editor binaries
         uses: actions/checkout@v2
