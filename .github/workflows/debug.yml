@@ -16,8 +16,8 @@ jobs:
     
       - name: Test some windows commands
         run: |
-          mkdir -p stuff
-          mkdir -p stuff
-          rm -rf stuff
-          rm -rf stuff2
+          mkdir -p stuff && exit 0
+          mkdir -p stuff && exit 0
+          rm -rf stuff && exit 0
+          rm -rf stuff2 && exit 0
           
