@@ -58,9 +58,9 @@ jobs:
           cd godot-cpp
           git submodule update --init godot_headers
 
-          scons -j2 platform=linux generate_bindings=yes bits=64
+          scons -j2 platform=linux generate_bindings=yes bits=64 debug_symbols=no
           cd ../
-          scons -j2 platform=linux bits=64
+          scons -j2 platform=linux bits=64 debug_symbols=no
 
       - name: Export the project
         run: |
