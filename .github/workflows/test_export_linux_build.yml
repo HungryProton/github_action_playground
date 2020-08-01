@@ -43,7 +43,7 @@ jobs:
           repository: HungryProton/concept_graph
           path: concept_graph
           ref: standalone
-          submodules: true
+          submodules: recursive
 
       - name: Clone the editor binaries
         uses: actions/checkout@v2
