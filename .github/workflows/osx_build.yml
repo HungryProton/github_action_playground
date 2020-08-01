@@ -37,10 +37,19 @@ jobs:
         with:
           repository: HungryProton/concept_graph_environment
           path: builds
+      
+      - name: Clone the ConceptGraph repository
+        uses: actions/checkout@v2
+        with:
+          repository: HungryProton/concept_graph
+          path: concept_graph
+          ref: standalone
+          submodules: recursive
 
       - name: Compile GDnative libraries
         run: |
           cd concept_graph/src/native/
+          ./compile_all.sh osx
           
       - name: Export the project
         run: |
