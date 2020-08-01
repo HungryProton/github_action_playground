@@ -14,23 +14,7 @@ defaults:
 
 
 jobs:
-  create_release:
-    name: Create Github release
-    runs-on: ubuntu-20.04
-    
-    steps:
-      - name: Create a Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            tag_name: ${{ github.ref }}
-            release_name: Linux Release ${{ github.event.inputs.version }}
-            body: ''
-            draft: true
-            prerelease: true
-  
+ 
   compile_osx_libs:
     name: Compile OSX libraries
     runs-on: macos-latest
@@ -76,7 +60,7 @@ jobs:
   export:
     name: Export the project
     runs-on: ubuntu-20.04
-    needs: [create_release, compile_osx_libs]
+    needs: [compile_osx_libs]
     
     steps:
         # Azure repositories are not reliable, we need to prevent azure giving us packages.
@@ -144,12 +128,24 @@ jobs:
           builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "osx" "../x11/ConceptGraph-${{ github.event.inputs.version }}/ConceptGraph"
           zip -r ConceptGraph-${{ github.event.inputs.version }}-osx.zip osx/ConceptGraph-${{ github.event.inputs.version }}
 
+      - name: Create a Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: ${{ github.ref }}
+            release_name: Linux Release ${{ github.event.inputs.version }}
+            body: ''
+            draft: true
+            prerelease: true
+
       - name: Upload Linux build
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ jobs.create_release.steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ConceptGraph-${{ github.event.inputs.version }}-linux.zip
           asset_name: ConceptGraph-${{ github.event.inputs.version }}-linux.zip
           asset_content_type: application/zip
@@ -159,7 +155,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ jobs.create_release.steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ConceptGraph-${{ github.event.inputs.version }}-windows.zip
           asset_name: ConceptGraph-${{ github.event.inputs.version }}-windows.zip
           asset_content_type: application/zip
@@ -169,7 +165,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ jobs.create_release.steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ConceptGraph-${{ github.event.inputs.version }}-osx.zip
           asset_name: ConceptGraph-${{ github.event.inputs.version }}-osx.zip
           asset_content_type: application/zip
