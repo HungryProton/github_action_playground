@@ -51,6 +51,16 @@ jobs:
           cd concept_graph/src/native/
           ./compile_all.sh osx
           
+      - name: Check status
+        run: |
+          pwd
+          echo "-- OSX Builds"
+          ls -al builds/osx
+          echo "-- Compiled gdnative"
+          ls -al concept_graph/src/native/thirdparty/mesh_optimizer/bin/
+          echo "-- Export presets"
+          more concept_graph/export_presets.cfg
+          
       - name: Export the project
         run: |
           mkdir -p ConceptGraph
