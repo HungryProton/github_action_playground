@@ -41,7 +41,6 @@ jobs:
       - name: Compile GDnative libraries
         run: |
           cd concept_graph/src/native/
-          ./compile_all.sh osx
           
       - name: Export the project
         run: |
