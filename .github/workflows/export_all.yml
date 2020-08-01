@@ -49,7 +49,7 @@ jobs:
       
       - name: Zip the repository with compiled dylibs
         run: |
-          zip -r concept_graph concept_graph.zip 
+          zip -r concept_graph.zip concept_graph 
   
       - name: Save the repository
         uses: actions/upload-artifact@master
