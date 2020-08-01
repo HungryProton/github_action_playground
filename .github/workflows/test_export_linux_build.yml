@@ -50,23 +50,27 @@ jobs:
           repository: HungryProton/concept_graph
           path: concept_graph
           ref: standalone
+          submodules: true
 
       - name: Compile GDnative libraries
         run: |
-          cd concept_graph/src/native
-          git submodule update --init godot-cpp
-          cd godot-cpp
-          git submodule update --init godot_headers
-
-          scons -j2 platform=linux generate_bindings=yes bits=64 debug_symbols=no
-          cd ../
-          scons -j2 platform=linux bits=64 debug_symbols=no
+          cd concept_graph/src/native/
+          ./compile_all linux
 
       - name: Export the project
         run: |
-          mkdir -p ConceptGraph
-          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "linux" "../ConceptGraph/ConceptGraph"
-          zip -r ConceptGraph.zip ConceptGraph
+          mkdir -p ConceptGraph-linux
+          mkdir -p ConceptGraph-windows
+          mkdir -p ConceptGraph-osx
+          
+          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "linux" "../ConceptGraph-linux/ConceptGraph"
+          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "windows" "../ConceptGraph-windows/ConceptGraph"
+          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "osx" "../ConceptGraph-osx/ConceptGraph"
+          
+          zip -r ConceptGraph-${{ github.event.inputs.version }}-linux.zip ConceptGraph-linux
+          zip -r ConceptGraph-${{ github.event.inputs.version }}-windows.zip ConceptGraph-windows
+          zip -r ConceptGraph-${{ github.event.inputs.version }}-osx.zip ConceptGraph-osx
+
 
       - name: Create a Release
         id: create_release
@@ -80,14 +84,32 @@ jobs:
             draft: true
             prerelease: true
 
-      - name: Upload artifacts to the release
-        id: upload-release-asset 
+      - name: Upload Linux build
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ConceptGraph.zip
-          asset_name: ConceptGraph.zip
+          asset_path: ConceptGraph-${{ github.event.inputs.version }}-linux.zip
+          asset_name: ConceptGraph for Linux
+          asset_content_type: application/zip
+
+      - name: Upload Windows build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ConceptGraph-${{ github.event.inputs.version }}-windows.zip
+          asset_name: ConceptGraph for Linux
           asset_content_type: application/zip
     
+      - name: Upload Osx build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ConceptGraph-${{ github.event.inputs.version }}-osx.zip
+          asset_name: ConceptGraph for MacOS
+          asset_content_type: application/zip   
