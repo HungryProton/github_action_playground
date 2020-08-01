@@ -68,7 +68,7 @@ jobs:
           zip -r concept_graph concept_graph.zip 
   
       - name: Save the repository
-      - uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@master
         with:
           name: concept_graph
           path: concept_graph.zip
