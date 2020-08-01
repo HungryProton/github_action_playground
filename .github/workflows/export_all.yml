@@ -125,7 +125,7 @@ jobs:
       - name: Export OSX build
         run: |
           mkdir -p osx/ConceptGraph-${{ github.event.inputs.version }}
-          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "osx" "../x11/ConceptGraph-${{ github.event.inputs.version }}/ConceptGraph"
+          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "osx" "../osx/ConceptGraph-${{ github.event.inputs.version }}/ConceptGraph"
           zip -r ConceptGraph-${{ github.event.inputs.version }}-osx.zip osx/ConceptGraph-${{ github.event.inputs.version }}
 
       - name: Create a Release
