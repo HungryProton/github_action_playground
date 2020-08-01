@@ -54,22 +54,19 @@ jobs:
       - name: Compile GDnative libraries
         run: |
           cd concept_graph/src/native/
-          ./compile_all linux
+          ./compile_all.sh linux
+          ./compile_all.sh windows
 
       - name: Export the project
         run: |
           mkdir -p ConceptGraph-linux
           mkdir -p ConceptGraph-windows
-          mkdir -p ConceptGraph-osx
           
           builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "linux" "../ConceptGraph-linux/ConceptGraph"
-          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "windows" "../ConceptGraph-windows/ConceptGraph"
-          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "osx" "../ConceptGraph-osx/ConceptGraph"
+          builds/server/godot_server.x11.opt.tools.64 --path concept_graph --export "windows" "../ConceptGraph-windows/ConceptGraph"          
           
           zip -r ConceptGraph-${{ github.event.inputs.version }}-linux.zip ConceptGraph-linux
           zip -r ConceptGraph-${{ github.event.inputs.version }}-windows.zip ConceptGraph-windows
-          zip -r ConceptGraph-${{ github.event.inputs.version }}-osx.zip ConceptGraph-osx
-
 
       - name: Create a Release
         id: create_release
@@ -102,13 +99,4 @@ jobs:
           asset_path: ConceptGraph-${{ github.event.inputs.version }}-windows.zip
           asset_name: ConceptGraph for Linux
           asset_content_type: application/zip
-    
-      - name: Upload Osx build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ConceptGraph-${{ github.event.inputs.version }}-osx.zip
-          asset_name: ConceptGraph for MacOS
-          asset_content_type: application/zip   
+
