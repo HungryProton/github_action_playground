@@ -18,7 +18,7 @@ jobs:
     runs-on: macos-latest
     
     steps:
-      
+
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
@@ -60,13 +60,7 @@ jobs:
           ls -al concept_graph/src/native/thirdparty/mesh_optimizer/bin/
           echo "-- Export presets"
           more concept_graph/export_presets.cfg
-          
-      - name: Export the project
-        run: |
-          mkdir -p ConceptGraph
-          builds/osx/godot.osx.opt.tools.64 --path concept_graph --export "osx" "../ConceptGraph/ConceptGraph"
-          zip -r ConceptGraph-${{ github.event.inputs.version }}-osx.zip ConceptGraph
-    
+      
       - name: Create a Release
         id: create_release
         uses: actions/create-release@v1
@@ -78,6 +72,22 @@ jobs:
             body: ''
             draft: true
             prerelease: true
+      
+      - name: Upload OSX lib
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: concept_graph/src/native/thirdparty/mesh_optimizer/bin/osx/libmeshoptimizer.dylib
+          asset_name: libmeshoptimizer.dylib
+          asset_content_type: application/zip
+
+      - name: Export the project
+        run: |
+          mkdir -p ConceptGraph
+          builds/osx/godot.osx.opt.tools.64 --path concept_graph --export "osx" "../ConceptGraph/ConceptGraph"
+          zip -r ConceptGraph-${{ github.event.inputs.version }}-osx.zip ConceptGraph
 
       - name: Upload OSX build
         uses: actions/upload-release-asset@v1
@@ -86,5 +96,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ConceptGraph-${{ github.event.inputs.version }}-osx.zip
-          asset_name: ConceptGraph for OSX
+          asset_name: ConceptGraph-osx.zip
           asset_content_type: application/zip
