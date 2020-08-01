@@ -37,13 +37,6 @@ jobs:
           python --version
           scons --version
 
-      - name: Clone the editor binaries
-        uses: actions/checkout@v2
-        with:
-          repository: HungryProton/concept_graph_environment
-          path: builds
-          lfs: true
-
       - name: Clone the ConceptGraph repository
         uses: actions/checkout@v2
         with:
@@ -51,6 +44,12 @@ jobs:
           path: concept_graph
           ref: standalone
           submodules: true
+
+      - name: Clone the editor binaries
+        uses: actions/checkout@v2
+        with:
+          repository: HungryProton/concept_graph_environment
+          path: builds
 
       - name: Compile GDnative libraries
         run: |
