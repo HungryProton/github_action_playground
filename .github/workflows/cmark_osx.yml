@@ -22,9 +22,11 @@ jobs:
         cmake ..
         make
         zip -r lib.zip src/
+        pwd
+        ls -al
     
     - name: Upload the library
       uses: actions/upload-artifact@master
       with:
         name: osx_lib
-        path: cmark-glm/build/lib.zip
+        path: cmark-gfm/build/lib.zip
