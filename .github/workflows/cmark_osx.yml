@@ -14,13 +14,17 @@ jobs:
         path: cmark-gfm
         ref: releases/0.29.0.gfm
 
-    - name: compile
+    - name: Compile binaries
       run: |
         cd cmark-gfm
         mkdir build
         cd build
         cmake ..
         make
-        ls -al
-        echo ">>>>"
-        ls -al src
+        zip -r lib.zip src/
+    
+    - name: Upload the library
+      uses: actions/upload-artifact@master
+      with:
+        name: osx_lib
+        path: build/lib.zip
