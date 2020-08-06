@@ -1,0 +1,26 @@
+name: CMarkGFM OSX
+
+on: workflow_dispatch
+
+jobs:
+  build_cmark:
+    runs-on: macos-latest
+
+    steps:
+    - name: Clone cmark-gfm
+      uses: actions/checkout@v2
+      with:
+        repository: github/cmark-gfm
+        path: cmark-gfm
+        ref: release/0.29.0.gfm
+
+    - name: compile
+      run: |
+        cd cmark-gfm
+        mkdir build
+        cd build
+        cmake ..
+        make
+        ls -al
+        echo ">>>>"
+        ls -al src
