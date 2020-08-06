@@ -37,7 +37,7 @@ jobs:
         cd ../
         make mingw
         cp build/src/libcmark.so.0.29.0 ../libcmark.so
-        cb build-mingw/src/libcmark.dll ../libcmark.dll
+        cp build-mingw/src/libcmark.dll ../libcmark.dll
      
     - name: Upload the Linux library
       uses: actions/upload-artifact@master
