@@ -2,6 +2,10 @@ name: Build cmark-gfm
 
 on: workflow_dispatch
 
+defaults:
+  run: 
+    shell: bash
+
 jobs:
   linux_build:
     runs-on: ubuntu-latest
@@ -30,9 +34,19 @@ jobs:
         path: libcmark-gfm.so
 
   windows_build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-          
+    
+    - name: Make apt sources.list use the default Ubuntu repositories
+      run: |
+        curl https://raw.githubusercontent.com/godotengine/godot/master/misc/ci/sources.list > sources.list
+        sudo cp -f sources.list /etc/apt/sources.list
+        sudo apt-get update
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install build-essential mingw-w64
+
     - name: Clone cmark-gfm
       uses: actions/checkout@v2
       with:
@@ -43,7 +57,7 @@ jobs:
     - name: Compile binaries
       run: |
         cd cmark-gfm
-        nmake
+        make mingw
         ls -al build-mingw/src
         cp build-mingw/src/libcmark-gfm.dll ../libcmark-gfm.dll
      
