@@ -8,7 +8,7 @@ defaults:
 
 jobs:
   linux_build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Clone cmark-gfm
@@ -34,7 +34,7 @@ jobs:
         path: libcmark-gfm.so
 
   windows_build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Clone cmark-gfm
@@ -47,11 +47,9 @@ jobs:
     - name: Compile binaries
       run: |
         cd cmark-gfm
-        mkdir build
-        nmake
-        ls -al build
-        ls -al build/src
-        cp build/src/libcmark-gfm.dll ../libcmark-gfm.so
+        make mingw
+        ls -al build-mingw/src
+        cp build-mingw/src/libcmark-gfm.dll ../libcmark-gfm.dll
      
     - name: Upload the library
       uses: actions/upload-artifact@master
