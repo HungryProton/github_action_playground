@@ -56,11 +56,11 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Clone cmark-gfm
+    - name: Clone cmark
       uses: actions/checkout@v2
       with:
-        repository: github/cmark-gfm
-        path: cmark-gfm
+        repository: commonmark/cmark
+        path: cmark
         ref: releases/0.29.0.gfm
 
     - name: Compile binaries
@@ -70,7 +70,8 @@ jobs:
         cd build
         cmake ..
         make
-        cp src/libcmark-gfm.0.29.0.gfm.0.dylib ../../libcmark-gfm.dylib
+        ls -al src
+        cp src/libcmark.0.29.0.dylib ../../libcmark.dylib
     
     - name: Upload the library
       uses: actions/upload-artifact@master
