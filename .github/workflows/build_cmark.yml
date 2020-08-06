@@ -26,7 +26,6 @@ jobs:
       with:
         repository: commonmark/cmark
         path: cmark
-        ref: 0.29.0
 
     - name: Compile binaries
       run: |
@@ -61,11 +60,10 @@ jobs:
       with:
         repository: commonmark/cmark
         path: cmark
-        ref: 0.29.0
 
     - name: Compile binaries
       run: |
-        cd cmark-gfm
+        cd cmark
         mkdir build
         cd build
         cmake ..
@@ -76,5 +74,5 @@ jobs:
     - name: Upload the library
       uses: actions/upload-artifact@master
       with:
-        name: libcmark-gfm.dylib
-        path: libcmark-gfm.dylib
+        name: libcmark.dylib
+        path: libcmark.dylib
