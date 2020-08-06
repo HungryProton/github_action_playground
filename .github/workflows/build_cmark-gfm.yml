@@ -1,4 +1,4 @@
-name: Build cmark-gfm
+name: Build cmark
 
 on: workflow_dispatch
 
@@ -7,36 +7,10 @@ defaults:
     shell: bash
 
 jobs:
-  linux_build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Clone cmark-gfm
-      uses: actions/checkout@v2
-      with:
-        repository: github/cmark-gfm
-        path: cmark-gfm
-        ref: releases/0.29.0.gfm
-
-    - name: Compile binaries
-      run: |
-        cd cmark-gfm
-        mkdir build
-        cd build
-        cmake ..
-        make
-        cp src/libcmark-gfm.so.0.29.0.gfm.0 ../../libcmark-gfm.so
-     
-    - name: Upload the library
-      uses: actions/upload-artifact@master
-      with:
-        name: libcmark-gfm.so
-        path: libcmark-gfm.so
-
-  windows_build:
+  linux_window_build:
     runs-on: ubuntu-latest
     steps:
-    
+
     - name: Make apt sources.list use the default Ubuntu repositories
       run: |
         curl https://raw.githubusercontent.com/godotengine/godot/master/misc/ci/sources.list > sources.list
@@ -46,26 +20,37 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get install build-essential mingw-w64
-
-    - name: Clone cmark-gfm
+        
+    - name: Clone cmark
       uses: actions/checkout@v2
       with:
-        repository: github/cmark-gfm
-        path: cmark-gfm
+        repository: commonmark/cmark
+        path: cmark
         ref: releases/0.29.0.gfm
 
     - name: Compile binaries
       run: |
-        cd cmark-gfm
+        cd cmark
+        mkdir build
+        cd build
+        cmake ..
+        make
+        cd ../
         make mingw
-        ls -al build-mingw/src
-        cp build-mingw/src/libcmark-gfm.dll ../libcmark-gfm.dll
+        cp build/src/libcmark.so.0.29.0 ../libcmark.so
+        cb build-mingw/src/libcmark.dll ../libcmark.dll
      
-    - name: Upload the library
+    - name: Upload the Linux library
       uses: actions/upload-artifact@master
       with:
-        name: libcmark-gfm.dll
-        path: libcmark-gfm.dll
+        name: libcmark.so
+        path: libcmark.so
+
+    - name: Upload the Windows library
+      uses: actions/upload-artifact@master
+      with:
+        name: libcmark.dll
+        path: libcmark.dll
  
   osx_build:
     runs-on: macos-latest
