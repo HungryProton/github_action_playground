@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: osx_lib
-        path: build/lib.zip
+        path: cmark-glm/build/lib.zip
