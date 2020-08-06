@@ -2,10 +2,6 @@ name: Build cmark-gfm
 
 on: workflow_dispatch
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   linux_build:
     runs-on: ubuntu-latest
@@ -34,9 +30,9 @@ jobs:
         path: libcmark-gfm.so
 
   windows_build:
-    runs-on: ubuntu-latest
-
+    runs-on: windows-latest
     steps:
+          
     - name: Clone cmark-gfm
       uses: actions/checkout@v2
       with:
@@ -47,7 +43,7 @@ jobs:
     - name: Compile binaries
       run: |
         cd cmark-gfm
-        make mingw
+        nmake
         ls -al build-mingw/src
         cp build-mingw/src/libcmark-gfm.dll ../libcmark-gfm.dll
      
