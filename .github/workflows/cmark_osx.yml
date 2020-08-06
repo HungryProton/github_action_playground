@@ -1,9 +1,13 @@
-name: CMarkGFM OSX
+name: Build cmark-gfm
 
 on: workflow_dispatch
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  build_cmark:
+  linux_build:
     runs-on: macos-latest
 
     steps:
@@ -21,12 +25,62 @@ jobs:
         cd build
         cmake ..
         make
-        zip -r lib.zip src/
-        pwd
-        ls -al
+        cp src/libcmark-gfm.so.0.29.0.gfm.0 ../../libcmark-gfm.so
+     
+    - name: Upload the library
+      uses: actions/upload-artifact@master
+      with:
+        name: libcmark-gfm.so
+        path: libcmark-gfm.so
+
+  windows_build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Clone cmark-gfm
+      uses: actions/checkout@v2
+      with:
+        repository: github/cmark-gfm
+        path: cmark-gfm
+        ref: releases/0.29.0.gfm
+
+    - name: Compile binaries
+      run: |
+        cd cmark-gfm
+        mkdir build
+        nmake
+        ls -al build
+        ls -al build/src
+        cp build/src/libcmark-gfm.dll ../libcmark-gfm.so
+     
+    - name: Upload the library
+      uses: actions/upload-artifact@master
+      with:
+        name: libcmark-gfm.dll
+        path: libcmark-gfm.dll
+ 
+  osx_build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Clone cmark-gfm
+      uses: actions/checkout@v2
+      with:
+        repository: github/cmark-gfm
+        path: cmark-gfm
+        ref: releases/0.29.0.gfm
+
+    - name: Compile binaries
+      run: |
+        cd cmark-gfm
+        mkdir build
+        cd build
+        cmake ..
+        make
+        cp src/libcmark-gfm.0.29.0.gfm.0.dylib ../../libcmark-gfm.dylib
     
     - name: Upload the library
       uses: actions/upload-artifact@master
       with:
-        name: osx_lib
-        path: cmark-gfm/build/lib.zip
+        name: libcmark-gfm.dylib
+        path: libcmark-gfm.dylib
